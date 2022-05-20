@@ -26,7 +26,7 @@ output_name = filename
 #CODE 
 titles =['MRS.', 'MS.', 'MR.', 'MISS.','MRS', 'MS', 'MR', 'MISS']
 illegals =('.',',','_','-','?','�','null', '|', '@', '')
-demacators = '-'
+demacators = ['-', '.']
 
 nicks= ['MOHD', 'MUHD', "MUH'D"]
 fulls = ['MOHAMMED', 'MUHAMMAD','MUHAMMAD']

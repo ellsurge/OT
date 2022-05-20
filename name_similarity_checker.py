@@ -1,6 +1,7 @@
 from numpy import average
 import pandas as pd
 from fuzzywuzzy import fuzz
+import re
 import os 
 
 
@@ -82,16 +83,21 @@ def compare(name1, name2):
 
                             initial_cache.append(name)
     return count
-        
 
-
-
+def reg_xterminator(s):
+    s = s.upper()
+    reg_processor =re.compile('[A-Z][.][A-Z]')
+    char_match = reg_processor.findall(s)
+    for char_place in  char_match:
+        s.replace(char_place, '[] []'.format(char_place[0], char_place[2]))
+    return s
 
 
 
 print('-----------------------------\ncomparing names..')
 for index, row in data.iterrows():
-
+    name1 = list(map(reg_xterminator, str(row[name1_coll_name]).split()))
+    name2 = list(map(reg_xterminator, str(row[name2_coll_name]).split()))
     name1 = list(map(remove_dot, str(row[name1_coll_name]).split()))
     name2 = list(map(remove_dot, str(row[name2_coll_name]).split()))
     while "" in name1:

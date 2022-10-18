@@ -1,72 +1,89 @@
 import csv
 from math import ceil
 import os
+import string
 
 # change to the file
 
-filename = "hrl2tosplit"
-batch = 200
-parts =  ['split'] #if you want yo eg, ['DAVID', 'JOHN', 'CHAT'] or [1,2]
+filename = "new"
+batch = 5
+parts =  ['call','james'] #if you want yo eg, ['DAVID', 'JOHN', 'CHAT'] or [1,2]
+dev_mode = False
+
+
+#---------------------------* do not touch *---------------------------------------------
+
+
+
+
 
 
 def mk(dir):
     out = 0
     try:
-        os.mkdir('splits/'+part_path)
-        out =1
+        os.mkdir(dir)
+        out =[1]
         
     except OSError as error:
-        out = (0,error)
+        out = [0,error]
     return out
-
+def log(*args):
+    if dev_mode:
+    
+        st= ""
+        for s in args:
+            st +=str(s)+" "
+        print(st)
+        
 
 print('loading file...')
 file = open(filename+".csv")
-count= 1
-nof =1
+count= 0
+nof =0
 write =''
 f = ''
 
 print('writing splits...')
 
 csvr = csv.reader(file)
+
 part_no = 0
 part_size = ceil((sum(1 for row in csvr)/batch)/len(parts))
+file = open(filename+".csv")
+csvr = csv.reader(file)
 
-part_path = 'splits/'+parts[part_no]
+
+mk('splits')
+lock = True      
 for row in csvr:
-    
-    if not nof % part_size :
-        part_no += 1
-        m=  mk('splits/'+part_path)
-        if m[0]:
+    log('row:',count)
+    if not bool(nof % part_size) and part_no < len(parts) and lock :
+        log('################## ',nof,' nod', part_size)
+        m=  mk('splits/'+parts[part_no])
+        if bool(m[0]):
             part_path = 'splits/'+parts[part_no]
         else:
-            print(m[1])
+            log(m[1])
             part_path = 'splits/'            
-
-        try:
-            print('#####errorr')
-            print(nof)
-            os.mkdir('splits/'+part_path)
-            part_path = 'splits/'+parts[part_no]
-            
-        except OSError as error:
-            print(error)
-            part_path = 'splits/'
-    if(count ==1):
+        part_no +=1
+        lock = False
+    if(count ==0):
+        log("--------opeing a new file")
         f= open('{}/split{}.csv'.format(part_path, str(nof)), 'w')
+        
     if(count == batch):
-        write = csv.writer(f)
-        write.writerow(row)
-        count =1
-        nof +=1
-        f.close()
-    else:
+        log('--------write done:',count)
+        
         write = csv.writer(f)
         write.writerow(row)
         
-
-
+        count =0
+        nof +=1
+        f.close()
+        lock = True
+    else:
+        log('writing line:',count)
+        write = csv.writer(f)
+        write.writerow(row)
         count +=1
-    
+print("done")

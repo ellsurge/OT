@@ -25,6 +25,8 @@ splits excel files basically, theres not much to that.
 
 - _split_name_: custom name for the splits
 
+- _dev_mode_: to allow logging nd error messages
+
 ## excel_file_merge.py
 
 ![under construction](https://i0.wp.com/avanelk.net/wp-content/uploads/2016/11/under-construction.jpg?w=225&ssl=1)
